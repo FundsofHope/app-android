@@ -1,43 +1,88 @@
-<LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/sample_main_layout">
+<!--<LinearLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:orientation="vertical"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:id="@+id/sample_main_layout">-->
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
+<!--<android.support.v7.widget.Toolbar-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--android:id="@+id/toolbar"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_width="match_parent"-->
+<!--android:fitsSystemWindows="true"-->
+<!--android:minHeight="?attr/actionBarSize"-->
+<!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+<!--android:background="?attr/colorPrimaryDark">-->
+<!--</android.support.v7.widget.Toolbar>-->
+
+
+
+<!--<android.support.v4.widget.DrawerLayout-->
+<!--android:id="@+id/drawer_layout"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+
+<!--<FrameLayout-->
+<!--android:id="@+id/sample_content_fragment"-->
+<!--android:layout_weight="2"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="0px" />-->
+
+<!--<FrameLayout-->
+<!--android:id="@+id/container"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent" />-->
+
+<!--<fragment android:id="@+id/navigation_drawer"-->
+<!--android:layout_width="@dimen/navigation_drawer_width"-->
+<!--android:layout_height="match_parent"-->
+<!--android:layout_gravity="start"-->
+<!--android:name="org.fundsofhope.androidapp.fragments.NavigationFragment"/>-->
+
+<!--</android.support.v4.widget.DrawerLayout>-->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- This LinearLayout represents the contents of the screen  -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="?android:colorPrimary"
-        android:minHeight="?attr/actionBarSize"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <!-- The ActionBar displayed at the top -->
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:fitsSystemWindows="true"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/AppTheme.Dark"
+            android:background="@color/primary">
+        </android.support.v7.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/sample_content_fragment"
-            android:layout_weight="2"
-            android:layout_width="match_parent"
-            android:layout_height="0px" />
-
-        <FrameLayout
-            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+    </LinearLayout>
 
-        <fragment android:id="@+id/navigation_drawer"
-            android:layout_width="@dimen/navigation_drawer_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:name="org.fundsofhope.androidapp.fragments.NavigationFragment"/>
+    <!-- The navigation drawer that comes from the left -->
+    <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/nav_drawer"
+        app:headerLayout="@layout/nav_header"/>
 
-    </android.support.v4.widget.DrawerLayout>
-
-
-</LinearLayout>
-
+</android.support.v4.widget.DrawerLayout>

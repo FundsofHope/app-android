@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 }, 3000);
-        Intent inte=new Intent(LoginActivity.this,SlidingActivity.class);
+        Intent inte=new Intent(LoginActivity.this,MainActivity.class);
         startActivity(inte);
     }
 
