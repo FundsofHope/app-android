@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     String email;
     String password;
+    String token;
     JSONObject jobj=null;
     SharedPreferences.Editor editor;
     
@@ -92,10 +93,14 @@ public class LoginActivity extends AppCompatActivity {
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    email = pref.getString("email", "");
-                    password = pref.getString("pass", "");
-                    Log.i(TAG,"email"+email+""+password);
-                    new LoginTask().execute("");
+                    //sdemail = pref.getString("email", "");
+                    //password = pref.getString("pass", "");
+                    //token=pref.getString("token","");
+                    //Log.i(TAG,"email"+email+""+password);
+                    Intent inte=new Intent(LoginActivity.this,SlidingActivity.class);
+                    startActivity(inte);
+                    finish();
+                    //new LoginTask().execute("");
                 }
             });
         }
@@ -146,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                 List<NameValuePair> data = new ArrayList<NameValuePair>();
                 data.add(new BasicNameValuePair("username", email));
                 data.add(new BasicNameValuePair("password", password));
+
                 DefaultHttpClient httpClient = new DefaultHttpClient();
 
                 HttpPost httpPost = new HttpPost(URL);
@@ -227,10 +233,12 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+
         protected void successlog(){
 
             Intent intent=new Intent(LoginActivity.this,SlidingActivity.class);
             startActivity(intent);
+            finish();
         }
 
     }
