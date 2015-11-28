@@ -12,7 +12,7 @@ import org.fundsofhope.androidapp.R;
 import org.fundsofhope.androidapp.Utils;
 
 
-public class TransitionSecondActivity extends Activity {
+public class /**/TransitionSecondActivity extends Activity {
 
     private static final int NUM_VIEWS = 5;
     private static final int SCALE_DELAY = 30;
