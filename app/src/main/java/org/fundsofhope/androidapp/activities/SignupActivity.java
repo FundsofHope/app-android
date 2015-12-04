@@ -1,7 +1,11 @@
 package org.fundsofhope.androidapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +14,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.fundsofhope.androidapp.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -24,13 +52,19 @@ public class SignupActivity extends AppCompatActivity {
     EditText _emailText;
     EditText _passwordText;
     EditText _phoneText;
-
-
+    String name;
+    String email;
+    String password;
+    String phone;
+    SharedPreferences.Editor editor;
+    JSONObject jobj=null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = pref.edit();
         _signupButton = (Button) findViewById(R.id.btn_sign);
         TextView _gotoLogin = (TextView) findViewById(R.id.link_login);
 
@@ -64,31 +98,151 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        _signupButton.setEnabled(false);
+        //_signupButton.setEnabled(false);
+        new LoginTask().execute("");
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
+        name = _nameText.getText().toString();
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
+        phone=_phoneText.getText().toString();
+        new LoginTask().execute("");
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+    }
+    ProgressDialog progressDialog;
+    private InputStream is = null;
+    private String page_output = "";
+    private class LoginTask extends AsyncTask<String, Integer, JSONObject> {
 
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(SignupActivity.this, R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Creating Account...");
+            progressDialog.show();
+
+
+        }
+
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            // TODO Auto-generated method stub
+
+
+//
+            try {
+                Log.i(TAG, "entered try()");
+                String URL = "http://fundsofhope.herokuapp.com/user/signup";
+
+                HttpClient Client = new DefaultHttpClient();
+                Log.i(TAG, "created client");
+//
+                HttpGet httpget = new HttpGet(URL);
+                Log.i(TAG, "hhtp get");
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                Log.i(TAG, "in response handler");
+
+                List<NameValuePair> data = new ArrayList<NameValuePair>();
+                Log.i(TAG, email);
+                Log.i(TAG, password);
+                Log.i(TAG, name);
+                data.add(new BasicNameValuePair("username", email));
+                data.add(new BasicNameValuePair("password", password));
+                data.add(new BasicNameValuePair("name", name));
+                Log.i(TAG, "creating name value");
+
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(URL);
+                httpPost.setEntity(new UrlEncodedFormEntity(data));
+                Log.i(TAG, "Encodding");
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                Log.i(TAG, "Executing");
+                HttpEntity httpEntity = httpResponse.getEntity();
+                is = httpEntity.getContent();
+
+
+                Log.i(TAG, "in strict mode");
+
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
+                    StringBuilder sb = new StringBuilder();
+
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line + "\n");
                     }
-                }, 3000);
+                    is.close();
+                    page_output = sb.toString();
+                    jobj = new JSONObject(page_output);
+
+                    Log.i("LOG", "page_output --> " + page_output);
+                } catch (Exception e) {
+                    Log.e("Buffer Error", "Error converting result " + e.toString());
+                }
+
+                Log.i(TAG, "request executed");
+
+            } catch (UnsupportedEncodingException ex) {
+                Toast.makeText(SignupActivity.this, "Incorrect Password or username", Toast.LENGTH_LONG).show();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            Log.i(TAG, "returning response");
+
+            return jobj;
+        }
+
+
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+
+        protected void onPostExecute(JSONObject result){
+            Log.i(TAG, "Entered on post execute");
+
+            // Log.i(TAG,result);
+            progressDialog.dismiss();
+            String ref= result.toString();
+            //Toast.makeText(SignupActivity.this,"length="+result.length()+result, Toast.LENGTH_LONG).show();
+            Pattern pattern= Pattern.compile(".*Valid.*");
+
+            Matcher matcher=pattern.matcher(ref);
+            try {
+                if(result.getInt("code")==2000) {
+                    Log.i(TAG, "Entered if");
+                    //successlog();
+                    Toast.makeText(SignupActivity.this,"Registered Succesfully", Toast.LENGTH_LONG).show();
+                    local_data();
+                }
+                else if(result.getInt("code")==11000) {
+                    Toast.makeText(SignupActivity.this, "User Already exist", Toast.LENGTH_LONG).show();
+
+                }
+                else
+                    Toast.makeText(SignupActivity.this,"Error connecting internet", Toast.LENGTH_LONG).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
+    public void local_data(){
+        Log.i(TAG,"entered local data");
+        editor.putString("name", name);
+        editor.putString("email",email);
+        editor.putString("pass", password);
+        editor.putInt("flag", 1);
+        editor.commit();
+        Intent intent=new Intent(SignupActivity.this,LoginActivity.class);
+        intent.putExtra("email",email);
+        startActivity(intent);
+    }
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);

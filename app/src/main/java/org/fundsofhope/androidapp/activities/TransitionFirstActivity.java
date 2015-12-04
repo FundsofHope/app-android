@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.fundsofhope.androidapp.R;
 import org.fundsofhope.androidapp.Utils;
@@ -19,6 +20,13 @@ public class TransitionFirstActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transition_first);
+        int loader = R.drawable.logo;
+
+        ImageView image=(ImageView)findViewById(R.id.image);
+        String image_url = "http://api.androidhive.info/images/sample.jpg";
+        ImageLoader imgLoader = new ImageLoader(getApplicationContext());
+        imgLoader.DisplayImage(image_url, loader, image);
+
 
         // Set explode animation when enter and exit the activity
         Utils.configureWindowEnterExitTransition(getWindow());
