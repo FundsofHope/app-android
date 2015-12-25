@@ -90,25 +90,26 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     ngo.setEnabled(false);
-                    user_flag=1;
+                    user_flag = 1;
                 }
             });
             ngo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     user.setEnabled(false);
-                    user_flag=2;
+                    user_flag = 2;
                 }
             });
-            SharedPreferences mpref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            editor = mpref.edit();
-            editor.putInt("user",user_flag);
-            editor.commit();
+
             _loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     email = _userName.getText().toString();
                     password = _passWord.getText().toString();
+                    SharedPreferences mpref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    editor = mpref.edit();
+                    editor.putInt("user",user_flag);
+                    editor.commit();
                     new LoginTask().execute("");
                 }
             });
@@ -137,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     //password = pref.getString("pass", "");
                     //token=pref.getString("token","");
                     //Log.i(TAG,"email"+email+""+password);
+
                     Intent inte=new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(inte);
                     finish();
@@ -256,8 +258,12 @@ public class LoginActivity extends AppCompatActivity {
                     editor = pref.edit();
 
                     String token=result.getString("token");
+
                     String message=result.getString("message");
                     editor.putInt("flag", 1);
+                    editor.putInt("user",user_flag);
+
+
                     editor.putString("token", token);
                     editor.putString("email",email);
                     editor.putString("pass",password);
@@ -283,6 +289,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         protected void successlog(){
+
 
             Intent intent=new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);

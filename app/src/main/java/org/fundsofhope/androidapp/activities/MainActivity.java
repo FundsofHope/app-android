@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         Button add;
         add=(Button)findViewById(R.id.fab_button);
         SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        //if(pref.getInt("user_flag",-1)==2)
-            add.setEnabled(true);
-        //else
-        //add.setEnabled(false);
+    Log.i(TAG, "loged in as"+String.valueOf(pref.getInt("user", -1)));
+        if(pref.getInt("user",-1)==2)
+            add.setClickable(true);
+        else
+        add.setEnabled(false);
         //Bitmap bi;
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,11 +434,11 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 break;
             case R.id.nav_second_fragment:
-                intent = new Intent(this, Recycler.class);
+                intent = new Intent(this, TransitionFirstActivity.class);
 
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, TransitionSecondActivity.class);
+                intent = new Intent(this, Recycler.class);
                 break;
             default :
                 intent = new Intent(this, MainActivity.class);

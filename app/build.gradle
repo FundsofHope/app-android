@@ -1,12 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/Anip Mehta/.android/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "org.fundsofhope.androidapp"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -22,8 +29,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
@@ -33,13 +39,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
-
     compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
-    compile 'com.squareup.picasso:picasso:2.2.+'
-
-
-
-
 
     compile files('libs/org.apache.http.legacy.jar')
 }
