@@ -3,6 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
@@ -10,6 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
+        android:id="@+id/log"
         android:paddingRight="24dp">
 
         <ImageView android:src="@drawable/logo"
@@ -63,7 +67,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="6dp"
             android:padding="12dp"
             android:text="Login"/>
 
@@ -79,11 +83,65 @@
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text="Sign Up"/>
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_below="@+id/log"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:id="@+id/app_for_you"
+        android:weightSum="2">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facebook"
+            android:padding="10dp"
+            android:id="@+id/facebook_login"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/com_facebook_button_background"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:onClick="facebookLogin"
+            android:textAlignment="gravity"
+
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Google+"
+            android:padding="10dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="0dp"
+            android:id="@+id/google_login"
+
+            android:background="@color/google_background"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16"
+            android:clickable="true"
+            android:onClick="googleLogin"
+            android:textAlignment="gravity"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
+    </RelativeLayout>
 </ScrollView>

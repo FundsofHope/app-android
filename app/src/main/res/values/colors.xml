@@ -4,13 +4,16 @@
   <color name="primary">#EC407A</color>
   <color name="primary_dark">#E91E63</color>
   <color name="accent">#EEFF41</color>
-
   <color name="black">#000000</color>
   <color name="jet">#222222</color>
   <color name="oil">#333333</color>
   <color name="monsoon">#777777</color>
   <color name="jumbo">#888888</color>
   <color name="aluminum">#999999</color>
+  <color name="fb_background_pressed">#2d477e</color>
+  <color name="google_background_pressed">#c74231</color>
+  <color name="google_background">#dd4b39</color>
+  <color name="google_background_translucent">#33dd4b39</color>
   <color name="base">#AAAAAA</color>
   <color name="iron">#CCCCCC</color>
   <color name="white">#FFFFFF</color>

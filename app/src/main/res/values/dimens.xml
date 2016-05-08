@@ -7,4 +7,42 @@
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="button_press_elevation">4dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="elevation_low">9dp</dimen>
+    <dimen name="elevation_high">12dp</dimen>
+    <dimen name="status_bar_height">25dp</dimen>
+    <dimen name="fab_compat_margin">0dp</dimen>
+
+    <dimen name="margin_xxxlarge">100dp</dimen>
+    <dimen name="margin_xxlarge">25dp</dimen>
+    <dimen name="margin_xlarge">20dp</dimen>
+    <dimen name="margin_large">15dp</dimen>
+    <dimen name="margin_lmedium">12dp</dimen>
+    <dimen name="margin_medium">10dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
+    <dimen name="margin_tiny">3dp</dimen>
+
+    <dimen name="corner_radius">4dp</dimen>
+    <dimen name="corner_radius_large">15dp</dimen>
+    <dimen name="size11">11dp</dimen>
+    <dimen name="size12">12dp</dimen>
+    <dimen name="size13">13dp</dimen>
+    <dimen name="size14">14dp</dimen>
+    <dimen name="size15">15dp</dimen>
+    <dimen name="size16">16dp</dimen>
+    <dimen name="size17">17dp</dimen>
+    <dimen name="size18">18dp</dimen>
+    <dimen name="size20">20dp</dimen>
+    <dimen name="size22">22dp</dimen>
+    <dimen name="size24">24dp</dimen>
+    <dimen name="size32">32dp</dimen>
+
+    <dimen name="recent_activity_height">75dp</dimen>
+    <dimen name="height_header">305dp</dimen>
+    <dimen name="height_user_header">415dp</dimen>
+    <dimen name="height_tabs">50dp</dimen>
+    <dimen name="height_list_footer">50dp</dimen>
+    <dimen name="list_progress_size">20dp</dimen>
+    <dimen name="tab_indicator_height">4dp</dimen>
+    <dimen name="height40">40dp</dimen>
+    <dimen name="height60">60dp</dimen>
 </resources>

@@ -50,6 +50,8 @@ public class Recycler extends AppCompatActivity {
     RecyclerView recList;
     String[] ttitle;
     String[] ddesc;
+    String [] image;
+    String [] about;
 //    String[] my1 = { "One", "Two", "Three" };
   //  String[] my = { "One", "Two", "Three" };
     @Override
@@ -68,6 +70,8 @@ public class Recycler extends AppCompatActivity {
         Log.i(TAG, String.valueOf(jsonArray.length()));
         String[] ttitle = new String[jsonArray.length()];
         String[] ddesc = new String[jsonArray.length()];
+        String[] image = new String [jsonArray.length()];
+        String[] about =new String  [jsonArray.length()];
         //title = new String[jsonArray.length()];
         //desc = new String[jsonArray.length()];
         //String[] ddate = new String[jsonArray.length()];
@@ -81,6 +85,7 @@ public class Recycler extends AppCompatActivity {
             try {
 
                 ttitle[i] = obj.getString("title");
+                about[i] = obj.getString("description");
                 Log.i(TAG, ttitle[i]);
 
             } catch (JSONException e) {
@@ -91,6 +96,11 @@ public class Recycler extends AppCompatActivity {
 
                 ddesc[i] = String.valueOf(obj.getInt("cost"));
                 Log.i(TAG, ddesc[i]);
+                if(obj.getString("imageURL")!=null)
+                    image[i]= obj.getString("imageURL");
+                    else
+                    image[i]= "https://upload.wikimedia.org/wikipedia/commons/c/c9/Chennai_india.jpg";
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -98,10 +108,12 @@ public class Recycler extends AppCompatActivity {
 
             RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
             recList.setHasFixedSize(true);
+           ;
             //Bitmap bi;
             //       new LoginTask().execute("");
-            ContactAdapter ca = new ContactAdapter(ttitle, ddesc);
+            ContactAdapter ca = new ContactAdapter(ttitle, ddesc,about,image,this);
             recList.setAdapter(ca);
+
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
@@ -110,7 +122,7 @@ public class Recycler extends AppCompatActivity {
             recList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent int1 = new Intent(Recycler.this, TransitionFirstActivity.class);
+                    Intent int1 = new Intent(Recycler.this, AddProject.class);
                     startActivity(int1);
                 }
             });

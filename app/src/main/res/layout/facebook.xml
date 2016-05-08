@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Facebook"
+        android:padding="10dp"
+        android:id="@+id/facebook_login"
+        android:layout_marginRight="6dp"
+        android:background="@drawable/com_facebook_button_background"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:onClick="facebookLogin"
+        android:textAlignment="gravity"
+
+
+        android:gravity="center" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Google+"
+        android:padding="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="0dp"
+        android:id="@+id/google_login"
+
+        android:background="@color/google_background"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:clickable="true"
+        android:onClick="googleLogin"
+        android:textAlignment="gravity"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        android:gravity="center"
+        />
+
+</LinearLayout>

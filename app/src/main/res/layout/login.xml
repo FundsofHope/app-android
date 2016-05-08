@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <!--<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:src="@drawable/running3"
+    android:scaleType="centerCrop"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff">
+
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+        </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="550dp"
+            android:layout_centerHorizontal="true"
+
+            android:gravity="center">
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="3dp"
+                android:id="@+id/view1"
+                android:background="@drawable/oval2">
+
+            </View>
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:id="@+id/view2"
+                android:layout_margin="3dp"
+                android:background="@drawable/oval">
+
+            </View>
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:id="@+id/view3"
+                android:layout_margin="3dp"
+                android:background="@drawable/oval">
+
+            </View>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/app_for_you"
+
+       >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facebook"
+            android:padding="10dp"
+            android:id="@+id/facebook_login"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/com_facebook_button_background"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:onClick="facebookLogin"
+            android:textAlignment="gravity"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Us"
+            android:padding="10dp"
+
+            android:layout_marginRight="0dp"
+            android:id="@+id/google_login"
+
+            android:background="@color/google_background"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:clickable="true"
+            android:onClick="mylogin"
+            android:textAlignment="gravity"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/margin_medium"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

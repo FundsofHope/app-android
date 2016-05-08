@@ -18,6 +18,7 @@ package org.fundsofhope.androidapp.slidingtabs.fragments;
 
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,8 +26,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import org.fundsofhope.androidapp.R;
+import org.fundsofhope.androidapp.activities.CircleTransform;
 import org.fundsofhope.androidapp.slidingtabs.views.SlidingTabLayout;
 
 
@@ -48,12 +52,13 @@ public class SlidingTabsBasicFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new SamplePagerAdapter());
+        mViewPager.setOffscreenPageLimit(2);
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
     class SamplePagerAdapter extends PagerAdapter {
-        final String [] TITLES = {"Home", "Regitered NGO's", "Profile"};
+        final String [] TITLES = {"Home", "Registered NGO's", "Profile"};
 
         @Override
         public int getCount() {
@@ -72,8 +77,20 @@ public class SlidingTabsBasicFragment extends Fragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            View view;
+            if(position==0){
+                view = getActivity().getLayoutInflater().inflate(R.layout.home_tab, container, false);
+            }
+            else if(position==2){
+                view = getActivity().getLayoutInflater().inflate(R.layout.profile, container, false);
+                SharedPreferences prefs;
+                ImageView pic= (ImageView) view.findViewById(R.id.image);
+                prefs = getActivity().getSharedPreferences("application_settings", 0);
+                Picasso.with(getActivity()).load(prefs.getString("pic","")).transform(new CircleTransform()).into(pic);
 
-            View view = getActivity().getLayoutInflater().inflate(R.layout.item_sliding_pager, container, false);
+            }
+            else
+            view = getActivity().getLayoutInflater().inflate(R.layout.item_sliding_pager, container, false);
             container.addView(view);
             return view;
 
@@ -86,4 +103,5 @@ public class SlidingTabsBasicFragment extends Fragment {
         }
 
     }
+
 }
