@@ -3,45 +3,23 @@ package org.fundsofhope.androidapp.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.fundsofhope.androidapp.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Anip on 12/3/2015.
  */
-public class Recycler extends AppCompatActivity {
+public class ProjectsActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     String TAG=null;
     String token;
@@ -52,8 +30,6 @@ public class Recycler extends AppCompatActivity {
     String[] ddesc;
     String [] image;
     String [] about;
-//    String[] my1 = { "One", "Two", "Three" };
-  //  String[] my = { "One", "Two", "Three" };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +98,7 @@ public class Recycler extends AppCompatActivity {
             recList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent int1 = new Intent(Recycler.this, AddProject.class);
+                    Intent int1 = new Intent(ProjectsActivity.this, ProjectAddActivity.class);
                     startActivity(int1);
                 }
             });

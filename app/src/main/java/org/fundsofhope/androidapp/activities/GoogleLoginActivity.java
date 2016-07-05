@@ -5,14 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -40,15 +36,12 @@ import com.google.android.gms.plus.model.people.Person;
 import org.fundsofhope.androidapp.R;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import java.util.Arrays;
 
 /**
  * Created by Anip on 1/19/2016.
  */
-public class Facebook extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+public class GoogleLoginActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
     CallbackManager callbackManager;
     SharedPreferences prefs;
     Person person;
@@ -91,7 +84,7 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
                         if (profile != null) {
                             makeGraphRequest(profile, accessToken);
                             Log.i("hell", "entering profile");
-                            Toast.makeText(Facebook.this, "name" + profile.getName()+profile.getFirstName()+profile.getLastName()+profile.getId(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(GoogleLoginActivity.this, "name" + profile.getName()+profile.getFirstName()+profile.getLastName()+profile.getId(), Toast.LENGTH_LONG).show();
 
 
                         } else {
@@ -116,13 +109,13 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
                     @Override
                     public void onCancel() {
                         // App code
-                        Toast.makeText(Facebook.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoogleLoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Toast.makeText(Facebook.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoogleLoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
                         exception.printStackTrace();
                     }
                 });
@@ -179,7 +172,7 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
                 final String firstName = user.optString("first_name");
                 final String lastName = user.optString("last_name");
                 final String birthday = user.optString("birthday");
-                Toast.makeText(Facebook.this,firstName+lastName+birthday+email+gender+name+fbId+fbPic,Toast.LENGTH_LONG).show();
+                Toast.makeText(GoogleLoginActivity.this,firstName+lastName+birthday+email+gender+name+fbId+fbPic,Toast.LENGTH_LONG).show();
             }
         });
         Bundle bundle = new Bundle();
@@ -190,7 +183,7 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("Login", "onConnected:" + bundle);
+        Log.d("SplashActivity", "onConnected:" + bundle);
 
 
         mShouldResolve = false;
@@ -208,7 +201,7 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("Login", "onConnectionFailed:" + connectionResult);
+        Log.d("SplashActivity", "onConnectionFailed:" + connectionResult);
 
         if (!mIsResolving && mShouldResolve) {
             if (connectionResult.hasResolution()) {
@@ -295,10 +288,10 @@ public class Facebook extends AppCompatActivity implements GoogleApiClient.Conne
             editor.putString("gender", gender);
             editor.commit();
 
-            Toast.makeText(Facebook.this,name+pic+birthday+email+firstName+lastName,Toast.LENGTH_LONG).show();
+            Toast.makeText(GoogleLoginActivity.this,name+pic+birthday+email+firstName+lastName,Toast.LENGTH_LONG).show();
         }
         else
-            Toast.makeText(Facebook.this,"Error login",Toast.LENGTH_LONG).show();
+            Toast.makeText(GoogleLoginActivity.this,"Error login",Toast.LENGTH_LONG).show();
     }
     public void googleLogin(View v) {
         // User clicked the sign-in button, so begin the sign-in process and automatically

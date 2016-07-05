@@ -9,17 +9,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -31,7 +28,6 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
@@ -43,24 +39,18 @@ import com.google.android.gms.plus.model.people.Person;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.fundsofhope.androidapp.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,126 +82,123 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     int requestCode = 0;
     int loginIntent = 0;
     private GoogleApiClient mGoogleApiClient;
-    ProgressDialog dialog;
     String postAction = "";
-    ViewPager pager;
-    RequestQueue queue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        setContentView(R.layout.activity_login);
 
-            setContentView(R.layout.activity_login);
-           // FacebookSdk.sdkInitialize(getApplicationContext());
-           // callbackManager = CallbackManager.Factory.create();
-            //LoginButton loginButton = (LoginButton) view.findViewById(R.id.usersettings_fragment_login_button);
-            //loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        // FacebookSdk.sdkInitialize(getApplicationContext());
+        // callbackManager = CallbackManager.Factory.create();
+        //LoginButton loginButton = (LoginButton) view.findViewById(R.id.usersettings_fragment_login_button);
+        //loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        //});
 
-            //});
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Plus.API)
-                    .addScope(new Scope(Scopes.PLUS_LOGIN))
-                    .addScope(new Scope("email"))
-                    .build();
-            callbackManager = CallbackManager.Factory.create();
-            LoginManager.getInstance().registerCallback(callbackManager,
-                    new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            // App code
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PLUS_LOGIN))
+                .addScope(new Scope("email"))
+                .build();
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        Log.i("hell", "entering profile");
+                        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
+                        final Profile profile = Profile.getCurrentProfile();
+                        if (profile != null) {
+                            makeGraphRequest(profile, accessToken);
                             Log.i("hell", "entering profile");
-                            final AccessToken accessToken = AccessToken.getCurrentAccessToken();
-
-                            final Profile profile = Profile.getCurrentProfile();
-                            if (profile != null) {
-                                makeGraphRequest(profile, accessToken);
-                                Log.i("hell", "entering profile");
-                                Toast.makeText(LoginActivity.this, "name" + profile.getName()+profile.getFirstName()+profile.getLastName()+profile.getId(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "name" + profile.getName()+profile.getFirstName()+profile.getLastName()+profile.getId(), Toast.LENGTH_LONG).show();
 
 
-                            } else {
-                                Log.i("hell", "entering else");
-                                ProfileTracker profileTracker = new ProfileTracker() {
-                                    @Override
-                                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                                        if (currentProfile != null) {
-                                            makeGraphRequest(currentProfile, accessToken);
-                                        }
-                                        stopTracking();
+                        } else {
+                            Log.i("hell", "entering else");
+                            ProfileTracker profileTracker = new ProfileTracker() {
+                                @Override
+                                protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                                    if (currentProfile != null) {
+                                        makeGraphRequest(currentProfile, accessToken);
                                     }
-                                };
-                                profileTracker.startTracking();
-                            }
-                            Intent intent = getIntent();
-                            requestCode = intent.getIntExtra("requestCode", 0);
-                            loginIntent = intent.getIntExtra("intent", 0);
-                            postAction = intent.getStringExtra("postAction");
+                                    stopTracking();
+                                }
+                            };
+                            profileTracker.startTracking();
                         }
+                        Intent intent = getIntent();
+                        requestCode = intent.getIntExtra("requestCode", 0);
+                        loginIntent = intent.getIntExtra("intent", 0);
+                        postAction = intent.getStringExtra("postAction");
+                    }
 
-                        @Override
-                        public void onCancel() {
-                            // App code
-                            Toast.makeText(LoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
-                        }
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        Toast.makeText(LoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
 
-                        @Override
-                        public void onError(FacebookException exception) {
-                            // App code
-                            Toast.makeText(LoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
-                            exception.printStackTrace();
-                        }
-                    });
-            editor = pref.edit();
-            editor.putInt("flag", 0);
-            _userName = (EditText) findViewById(R.id.input_user);
-            _passWord = (EditText) findViewById(R.id.input_password);
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                        Toast.makeText(LoginActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                        exception.printStackTrace();
+                    }
+                });
+        editor = pref.edit();
+        editor.putInt("flag", 0);
+        _userName = (EditText) findViewById(R.id.input_user);
+        _passWord = (EditText) findViewById(R.id.input_password);
 
-            _loginButton = (Button) findViewById(R.id.btn_login);
-            _signupButton = (Button) findViewById(R.id.btn_signup);
-            user=(RadioButton)findViewById(R.id.user);
-            ngo=(RadioButton)findViewById(R.id.ngo);
-            user.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ngo.setEnabled(false);
-                    user_flag = 1;
-                }
-            });
-            ngo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    user.setEnabled(false);
-                    user_flag = 2;
-                }
-            });
+        _loginButton = (Button) findViewById(R.id.btn_login);
+        _signupButton = (Button) findViewById(R.id.btn_signup);
+        user=(RadioButton)findViewById(R.id.user);
+        ngo=(RadioButton)findViewById(R.id.ngo);
+        user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ngo.setEnabled(false);
+                user_flag = 1;
+            }
+        });
+        ngo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user.setEnabled(false);
+                user_flag = 2;
+            }
+        });
 
-            _loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    email = _userName.getText().toString();
-                    password = _passWord.getText().toString();
-                    SharedPreferences mpref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    editor = mpref.edit();
-                    editor.putInt("user",user_flag);
-                    editor.commit();
-                    new LoginTask().execute("");
-                }
-            });
+        _loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = _userName.getText().toString();
+                password = _passWord.getText().toString();
+                SharedPreferences mpref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                editor = mpref.edit();
+                editor.putInt("user",user_flag);
+                editor.apply();
+                new LoginTask().execute("");
+            }
+        });
 
-            _signupButton.setOnClickListener(new View.OnClickListener() {
+        _signupButton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                    startActivityForResult(intent, REQUEST_SIGNUP);
-                }
-            });
-        }
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivityForResult(intent, REQUEST_SIGNUP);
+            }
+        });
+    }
        /* else {
             setContentView(R.layout.activity_back);
 
@@ -238,14 +225,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         */
 
 
-
-
-    private InputStream is = null;
-    private String page_output = "";
-
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("Login", "onConnected:" + bundle);
+        Log.d("SplashActivity", "onConnected:" + bundle);
 
 
         mShouldResolve = false;
@@ -276,7 +258,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("Login", "onConnectionFailed:" + connectionResult);
+        Log.d("SplashActivity", "onConnectionFailed:" + connectionResult);
 
         if (!mIsResolving && mShouldResolve) {
             if (connectionResult.hasResolution()) {
@@ -293,9 +275,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // error dialog.
                 showErrorDialog(connectionResult);
             }
-        } else {
-            // Show the signed-out UI
-            //showSignedOutUI();
         }
     }
 
@@ -309,19 +288,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
             progressDialog.show();
-            // progressDialog.dismiss();
-
-
         }
 
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            // TODO Auto-generated method stub
-
-
-//            Log.i(TAG,uname.getText().toString()+"ksjdvnslkdvxnwadlk");
-//			Log.i(TAG,pass.getText().toString()+"fsdxcjvnskjdn");
             try{
                 Log.i(TAG,"entered try()");
 
@@ -330,16 +301,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.i(TAG,email);
                 Log.i(TAG,password);
                 if(user_flag==1)
-                URL="http://fundsofhope.herokuapp.com/user/login";
+                    URL="http://fundsofhope.herokuapp.com/user/login";
                 else if(user_flag==2)
                     URL="http://fundsofhope.herokuapp.com/ngo/login";
-                HttpClient Client=new DefaultHttpClient();
-                Log.i(TAG,"created client");
-//			try{
-//				String Response="";
-                HttpGet httpget=new HttpGet(URL);
-                Log.i(TAG, "hhtp get");
-                ResponseHandler<String> responseHandler=new BasicResponseHandler();
                 Log.i(TAG, "in response handler");
 
                 List<NameValuePair> data = new ArrayList<NameValuePair>();
@@ -355,20 +319,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 Log.i(TAG,"executed");
-                is = httpEntity.getContent();
+                InputStream is = httpEntity.getContent();
                 Log.i(TAG, "in strict mode");
 
                 try {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
                     StringBuilder sb = new StringBuilder();
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null)
                     {
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                     }
                     is.close();
-                    page_output = sb.toString();
+                    String page_output = sb.toString();
                     jobj=new JSONObject(page_output);
                     Log.i("LOG", "page_output --> " + page_output);
                 } catch (Exception e) {
@@ -377,9 +341,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 Log.i(TAG,"request executed");
 
-            } catch(UnsupportedEncodingException e){
-            } catch (IOException e) {
-            }
+            } catch (IOException ignored) {}
             Log.i(TAG, "returning response");
             return jobj;
         }
@@ -413,12 +375,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     editor.putString("token", token);
                     editor.putString("email",email);
                     editor.putString("pass",password);
-                    editor.commit();
+                    editor.apply();
 
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                     System.out.println("token is"+token);
                     Log.i(TAG, "Entered if");
-                    //onLoginSuccess();
+                    onLoginSuccess();
                     successlog();
                 }
                 else if (!result.getBoolean("login")) {
@@ -450,16 +412,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             // If the error resolution was not successful we should not resolve further.
             if (resultCode != RESULT_OK) {
                 mShouldResolve = false;
-            } else {
-
-//                dialog.setTitle("Signing In");
-                //              dialog.setCancelable(false);
-                //            dialog.show();
             }
-
             mIsResolving = false;
             mGoogleApiClient.connect();
-
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
@@ -471,36 +426,39 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         moveTaskToBack(true);
     }
 
+
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "SplashActivity failed", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }
 
+
     public boolean validate() {
         boolean valid = true;
-
         String password = _passWord.getText().toString();
-
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             _passWord.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
             _passWord.setError(null);
         }
-
         return valid;
     }
+
+
     public void facebookLogin(View v) {
         Log.i("hell","reached on facebook login");
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
         Log.i("hell", "exiting facebook login");
     }
+
+
     private void makeGraphRequest(Profile profile, final AccessToken accessToken) {
 
         final String name = profile.getName();
@@ -532,6 +490,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         request.setParameters(bundle);
         request.executeAsync();
     }
+
+
     public void googleLogin() {
         Log.i("hell", "enterd google login");
         person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
@@ -558,7 +518,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             editor.putString("ageRangeMin", String.valueOf(ageRangeMin));
             editor.putString("ageRangeMax", String.valueOf(ageRangeMax));
             editor.putString("gender", gender);
-            editor.commit();
+            editor.apply();
             Intent intent=new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
@@ -567,36 +527,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         else
             Toast.makeText(LoginActivity.this,"Error login",Toast.LENGTH_LONG).show();
     }
+
     public void googleLogin(View v) {
-        // User clicked the sign-in button, so begin the sign-in process and automatically
-        // attempt to resolve any errors that occur.
         mShouldResolve = true;
         mGoogleApiClient.connect();
-
-        // Show a message to the user that we are signing in.
-        //mStatusTextView.setText(R.string.signing_in);
     }
+
     private void showErrorDialog(ConnectionResult connectionResult) {
         int errorCode = connectionResult.getErrorCode();
 
         if (GooglePlayServicesUtil.isUserRecoverableError(errorCode)) {
-            // Show the default Google Play services error dialog which may still start an intent
-            // on our behalf if the user can resolve the issue.
             GooglePlayServicesUtil.getErrorDialog(errorCode, this, RC_SIGN_IN,
                     new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
                             mShouldResolve = false;
-                            //updateUI(false);
                         }
                     }).show();
         } else {
-            // No default Google Play Services error, display a message to the user.
-            //String errorString = getString(R.string.play_services_error_fmt, errorCode);
-            //Toast.makeText(this, errorString, Toast.LENGTH_SHORT).show();
-
             mShouldResolve = false;
-            //updateUI(false);
         }
     }
 }

@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -49,7 +47,7 @@ import java.util.Arrays;
 /**
  * Created by Anip on 2/2/2016.
  */
-public class Login extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+public class SplashActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
     CallbackManager callbackManager;
     SharedPreferences prefs;
     Person person;
@@ -57,14 +55,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
             R.drawable.images1,
             R.drawable.images2,
             R.drawable.logo
-    };
-    String[] mTitle = {
-            "CONNECT WITH CLIENTS",
-            "CONSULT ONLINE",
-            "EASY & FAST MESSAGING"
-    };
-    String[] mContent= {
-            " Now get connected to users, who are into fitness and need your help to improve","Increase your reach by going online. No more dropping of leads because you are far way from the client","Reply to user queries in seconds as per your availability. Attach files or photos easily"
     };
     private boolean mIsResolving = false;
     private boolean mShouldResolve = false;
@@ -145,7 +135,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                         if (profile != null) {
                             makeGraphRequest(profile, accessToken);
                             Log.i("hell", "entering profile");
-                            Toast.makeText(Login.this, "name" + profile.getName() + profile.getFirstName() + profile.getLastName() + profile.getId(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(SplashActivity.this, "name" + profile.getName() + profile.getFirstName() + profile.getLastName() + profile.getId(), Toast.LENGTH_LONG).show();
 
 
                         } else {
@@ -170,13 +160,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                     @Override
                     public void onCancel() {
                         // App code
-                        Toast.makeText(Login.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SplashActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Toast.makeText(Login.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SplashActivity.this, "Could not sign in. Please try again.", Toast.LENGTH_SHORT).show();
                         exception.printStackTrace();
                     }
                 });
@@ -233,7 +223,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
                 final String firstName = user.optString("first_name");
                 final String lastName = user.optString("last_name");
                 final String birthday = user.optString("birthday");
-                Toast.makeText(Login.this,firstName+lastName+birthday+email+gender+name+fbId+fbPic,Toast.LENGTH_LONG).show();
+                Toast.makeText(SplashActivity.this,firstName+lastName+birthday+email+gender+name+fbId+fbPic,Toast.LENGTH_LONG).show();
             }
         });
         Bundle bundle = new Bundle();
@@ -244,7 +234,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("Login", "onConnected:" + bundle);
+        Log.d("SplashActivity", "onConnected:" + bundle);
 
 
         mShouldResolve = false;
@@ -262,7 +252,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("Login", "onConnectionFailed:" + connectionResult);
+        Log.d("SplashActivity", "onConnectionFailed:" + connectionResult);
 
         if (!mIsResolving && mShouldResolve) {
             if (connectionResult.hasResolution()) {
@@ -322,7 +312,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         }
     }
     public void mylogin(View v){
-        Intent intent=new Intent(Login.this,LoginActivity.class);
+        Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
         startActivity(intent);
     }
     public void googleLogin() {
@@ -352,12 +342,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
             editor.putString("ageRangeMax", String.valueOf(ageRangeMax));
             editor.putString("gender", gender);
             editor.commit();
-            Intent intent=new Intent(Login.this,MainActivity.class);
+            Intent intent=new Intent(SplashActivity.this,MainActivity.class);
             startActivity(intent);
-          //  Toast.makeText(Login.this,name+pic+birthday+email+firstName+lastName,Toast.LENGTH_LONG).show();
+          //  Toast.makeText(SplashActivity.this,name+pic+birthday+email+firstName+lastName,Toast.LENGTH_LONG).show();
         }
         else
-            Toast.makeText(Login.this,"Error login",Toast.LENGTH_LONG).show();
+            Toast.makeText(SplashActivity.this,"Error login",Toast.LENGTH_LONG).show();
     }
     public void googleLogin(View v) {
         // User clicked the sign-in button, so begin the sign-in process and automatically

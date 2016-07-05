@@ -84,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
         _gotoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
+                // Finish the registration screen and return to the SplashActivity activity
                 finish();
             }
         });
@@ -251,7 +251,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "SplashActivity failed", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }

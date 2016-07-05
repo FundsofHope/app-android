@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by Anip on 12/4/2015.
  */
-public class AddProject extends AppCompatActivity {
+public class ProjectAddActivity extends AppCompatActivity {
     EditText title;
     EditText desc;
     EditText cost;
@@ -84,7 +84,7 @@ public class AddProject extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(AddProject.this,
+            progressDialog = new ProgressDialog(ProjectAddActivity.this,
                     R.style.AppTheme_Dark_Dialog);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
@@ -97,11 +97,6 @@ public class AddProject extends AppCompatActivity {
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            // TODO Auto-generated method stub
-
-
-//            Log.i(TAG,uname.getText().toString()+"ksjdvnslkdvxnwadlk");
-//			Log.i(TAG,pass.getText().toString()+"fsdxcjvnskjdn");
             try {
                 Log.i(TAG, "entered try()");
 
@@ -112,8 +107,6 @@ public class AddProject extends AppCompatActivity {
                 String URL = "http://fundsofhope.org/ngo/"+id+"/project/";
                 HttpClient Client = new DefaultHttpClient();
                 Log.i(TAG, "created client");
-//			try{
-//				String Response="";
                 List<NameValuePair> data = new ArrayList<NameValuePair>();
                 HttpGet httpget = new HttpGet(URL);
                 Log.i(TAG, "hhtp get" + token);
@@ -177,11 +170,11 @@ public class AddProject extends AppCompatActivity {
                     //onLoginSuccess();
                     // successlog()
                     //;
-                    Toast.makeText(AddProject.this, "New Project Created", Toast.LENGTH_LONG).show();
-                    Intent inte=new Intent(AddProject.this,MainActivity.class);
+                    Toast.makeText(ProjectAddActivity.this, "New Project Created", Toast.LENGTH_LONG).show();
+                    Intent inte=new Intent(ProjectAddActivity.this,MainActivity.class);
                     startActivity(inte);
                 }else {
-                    Toast.makeText(AddProject.this, "Can't Connect to the servers", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProjectAddActivity.this, "Can't Connect to the servers", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -35,15 +35,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.fundsofhope.androidapp.R;
 import org.fundsofhope.androidapp.slidingtabs.fragments.SlidingTabsBasicFragment;
@@ -54,9 +52,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,22 +76,19 @@ public class MainActivity extends AppCompatActivity {
         Button add;
         add=(Button)findViewById(R.id.fab_button);
         SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    Log.i(TAG, "loged in as"+String.valueOf(pref.getInt("user", -1)));
+        Log.i(TAG, "loged in as"+String.valueOf(pref.getInt("user", -1)));
 
-            add.setClickable(true);
+        add.setClickable(true);
 
         //Bitmap bi;
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent inte=new Intent(MainActivity.this,Facebook.class);
+                Intent inte=new Intent(MainActivity.this,GoogleLoginActivity.class);
                 startActivity(inte);
                 finish();
             }
         });
-
-
-
 //            Pushbots.sharedInstance().init(this);
             temp = 2;
 
@@ -114,11 +106,8 @@ public class MainActivity extends AppCompatActivity {
         configureToolbar();
         configureDrawer();
     }
-    private InputStream isi = null;
-    private String page_outputo = "";
 
     private class LoginTask extends AsyncTask<String, Integer, JSONObject> {
-
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -127,69 +116,43 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
             progressDialog.show();
-            // progressDialog.dismiss();
-
-
         }
-
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            // TODO Auto-generated method stub
-
-
-//            Log.i(TAG,uname.getText().toString()+"ksjdvnslkdvxnwadlk");
-//			Log.i(TAG,pass.getText().toString()+"fsdxcjvnskjdn");
             try {
-                Log.i(TAG, "entered try()");
-
-                //Toast.makeText(getApplicationContext(), "Please wait,connecting to server",Toast.LENGTH_LONG).show();
-                Log.i(TAG, "entered toast()");
-                //Log.i(TAG,email);
-                //Log.i(TAG,password);
+                Toast.makeText(getApplicationContext(), "Please wait,connecting to server",Toast.LENGTH_LONG).show();
                 String URL = "http://fundsofhope.herokuapp.com/user/";
                 HttpClient Client = new DefaultHttpClient();
                 Log.i(TAG, "created client");
-//			try{
-//				String Response="";
+
                 HttpGet httpget = new HttpGet(URL);
-                Log.i(TAG, "hhtp get" + token);
                 httpget.addHeader("x-access-token",token);
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                Log.i(TAG, "in response handler");
-
-                List<NameValuePair> data = new ArrayList<NameValuePair>();
-
-                DefaultHttpClient httpClient = new DefaultHttpClient();
 
                 HttpResponse httpResponse = Client.execute(httpget);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 Log.i(TAG, "executed");
-                isi = httpEntity.getContent();
+                InputStream isi = httpEntity.getContent();
                 Log.i(TAG, "in strict mode");
 
                 try {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(isi, "UTF-8"), 8);
                     StringBuilder sb = new StringBuilder();
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                     }
                     isi.close();
-                    page_outputo = sb.toString();
+                    String page_outputo = sb.toString();
                     jobj = new JSONObject(page_outputo);
                     Log.i("LOG", "page_output --> " + page_outputo);
                 } catch (Exception e) {
                     Log.e("Buffer Error", "Error converting result " + e.toString());
                 }
-
                 Log.i(TAG, "request executed");
 
-            } catch (UnsupportedEncodingException e) {
-            } catch (IOException e) {
-            }
-            Log.i(TAG, "returning response");
+            } catch (IOException ignored) {}
             return jobj;
         }
 
@@ -201,39 +164,26 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Entered on post execute");
             progressDialog.dismiss();
 
-            //Toast.makeText(LoginActivity.this,"length="+result.length()+result, Toast.LENGTH_LONG).show();
-            if(result!=null) {
-                try {
+            Toast.makeText(MainActivity.this,"length="+result.length()+result, Toast.LENGTH_LONG).show();
+            try {
+                if (result.getString("message").contains("Home")) {
+                    new GetProjectTask().execute("");
+                } else if (!result.getBoolean("success")) {
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    editor = pref.edit();
+                    editor.putInt("flag", 0);
+                    editor.apply();
 
-                    if (result.getString("message").contains("Home")) {
-                        //onLoginSuccess();
-                        new LooginTask().execute("");
-                        // successlog();
-                    } else if (!result.getBoolean("success")) {
-                        // onLoginFailed();
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        editor = pref.edit();
-                        editor.putInt("flag", 0);
-                        editor.commit();
-
-                        Intent inte = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(inte);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    Intent inte = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(inte);
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            else
-                Toast.makeText(MainActivity.this, "Can't Connect", Toast.LENGTH_LONG).show();
+        }
+    }
 
-        }}
-    private InputStream is = null;
-    private String page_output = "";
-
-    private class LooginTask extends AsyncTask<String, Integer, JSONObject> {
-
-
+    private class GetProjectTask extends AsyncTask<String, Integer, JSONObject> {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(MainActivity.this,
@@ -241,64 +191,39 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Authenticating...");
             progressDialog.show();
-            // progressDialog.dismiss();
-
-
         }
-
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            // TODO Auto-generated method stub
-
-
-//            Log.i(TAG,uname.getText().toString()+"ksjdvnslkdvxnwadlk");
-//			Log.i(TAG,pass.getText().toString()+"fsdxcjvnskjdn");
             try {
                 Log.i(TAG, "entered try()");
 
-                //Toast.makeText(getApplicationContext(), "Please wait,connecting to server",Toast.LENGTH_LONG).show();
-                Log.i(TAG, "entered toast()");
-                //Log.i(TAG,email);
-                //Log.i(TAG,password);
+                Toast.makeText(getApplicationContext(), "Please wait,connecting to server",Toast.LENGTH_LONG).show();
                 String URL = "http://fundsofhope.org/project/";
                 HttpClient Client = new DefaultHttpClient();
-                Log.i(TAG, "created client");
-//			try{
-//				String Response="";
                 HttpGet httpget = new HttpGet(URL);
-                Log.i(TAG, "hhtp get" + token);
                 httpget.addHeader("x-access-token", "");
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
                 Log.i(TAG, "in response handler");
 
-                List<NameValuePair> data = new ArrayList<NameValuePair>();
-
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-
                 HttpResponse httpResponse = Client.execute(httpget);
-                Log.i(TAG, "entered execute");
                 HttpEntity httpEntity = httpResponse.getEntity();
-                Log.i(TAG, "executed");
-                is = httpEntity.getContent();
-                Log.i(TAG, "in strict mode");
+                InputStream is = httpEntity.getContent();
 
                 try {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
                     StringBuilder sb = new StringBuilder();
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                     }
                     is.close();
-                    page_output = sb.toString();
+                    String page_output = sb.toString();
                     SharedPreferences mypref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     editor = mypref.edit();
                     editor.putString("projects", page_output);
-                    editor.commit();
-                    //onSuccess();
-                    //jobj = new JSONObject(page_output);
+                    editor.apply();
+                    jobj = new JSONObject(page_output);
                     Log.i("LOG", "page_output --> " + page_output);
                 } catch (Exception e) {
                     Log.e("Buffer Error", "Error converting result " + e.toString());
@@ -306,8 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i(TAG, "request executed");
 
-            } catch (UnsupportedEncodingException e) {
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
             Log.i(TAG, "returning response");
             return jobj;
@@ -320,16 +244,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             Log.i(TAG, "Entered on post execute");
             progressDialog.dismiss();
-
-
-            //Toast.makeText(LoginActivity.this,"length="+result.length()+result, Toast.LENGTH_LONG).show();
-
-
-
-
-            //          System.out.println(ttitle[0]);
-//           System.out.println(ddesc[0]);
-
 
         }
     }
@@ -339,23 +253,9 @@ public class MainActivity extends AppCompatActivity {
         mainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setTitle("FundsofHope");
-
-//        mainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-//                    mDrawerLayout.closeDrawer(Gravity.START);
-//
-//                } else {
-//                    mDrawerLayout.openDrawer(Gravity.START);
-//                }
-//            }
-//        });
     }
 
     private void configureDrawer() {
-        // Configure drawer
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         navView = (NavigationView) findViewById(R.id.navView);
@@ -363,23 +263,8 @@ public class MainActivity extends AppCompatActivity {
         setupDrawerContent(navView);
 
 
-//        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-//                R.string.drawer_open,
-//                R.string.drawer_closed) {
-//
-//            public void onDrawerClosed(View view) {
-//                supportInvalidateOptionsMenu();
-//            }
-//
-//            public void onDrawerOpened(View drawerView) {
-//                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-//            }
-//        };
-//
-//        mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle = setupDrawerToggle();
 
-        // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.setDrawerListener(mDrawerToggle);
     }
 
@@ -399,34 +284,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-//  In case of Fragments
-//        Fragment fragment = null;
-//
-//        Class fragmentClass;
-//        switch(menuItem.getItemId()) {
-//            case R.id.nav_first_fragment:
-//                fragmentClass = MainActivity.class;
-//                break;
-//            case R.id.nav_second_fragment:
-//                fragmentClass = TransitionFirstActivity.class;
-//                break;
-//            case R.id.nav_third_fragment:
-//                fragmentClass = TransitionSecondActivity.class;
-//                break;
-//            default:
-//                fragmentClass = MainActivity.class;
-//        }
-//
-//        try {
-//            fragment = (Fragment) fragmentClass.newInstance();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.sample_content_fragment, fragment).commit();
 
-        Intent intent = null;
+        Intent intent;
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 intent = new Intent(this, MainActivity.class);
@@ -436,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, Recycler.class);
+                intent = new Intent(this, ProjectsActivity.class);
                 break;
             default :
                 intent = new Intent(this, MainActivity.class);
@@ -451,10 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -468,13 +324,4 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
-//    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-//        @Override
-//        public void onItemClick(AdapterView parent, View view, int position, long id) {
-//            selectItem(position);
-//            drawerLayout.closeDrawer(drawerListView);
-//
-//        }
-//    }
 }

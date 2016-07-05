@@ -28,9 +28,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.Login" android:theme="@style/AppTheme.Dark"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+        <activity android:name=".activities.SplashActivity" android:theme="@style/AppTheme.Dark"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,10 +44,10 @@
         <activity android:name=".activities.SignupActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.TransitionFirstActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.TransitionSecondActivity" android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activities.AddProject" android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".activities.ProjectAddActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.TempActivity" android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activities.Recycler" android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activities.Facebook" android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".activities.ProjectsActivity" android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".activities.GoogleLoginActivity" android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activities.LoginActivity" android:theme="@style/AppTheme.Dark"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait"
