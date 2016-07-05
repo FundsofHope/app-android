@@ -28,9 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 import org.fundsofhope.androidapp.R;
-import org.fundsofhope.androidapp.activities.CircleTransform;
 import org.fundsofhope.androidapp.slidingtabs.views.SlidingTabLayout;
 
 
@@ -86,8 +84,9 @@ public class SlidingTabsBasicFragment extends Fragment {
                 SharedPreferences prefs;
                 ImageView pic= (ImageView) view.findViewById(R.id.image);
                 prefs = getActivity().getSharedPreferences("application_settings", 0);
-                Picasso.with(getActivity()).load(prefs.getString("pic","")).transform(new CircleTransform()).into(pic);
-
+//                if(prefs.getString("pic", "") != null) {
+//                    Picasso.with(getActivity()).load(prefs.getString("pic", "")).transform(new CircleTransform()).into(pic);
+//                }
             }
             else
             view = getActivity().getLayoutInflater().inflate(R.layout.item_sliding_pager, container, false);
